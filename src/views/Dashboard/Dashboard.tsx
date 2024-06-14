@@ -1,18 +1,4 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import {
   Dialog,
   DialogPanel,
@@ -36,6 +22,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { useSelector, useDispatch } from 'react-redux'
+import {logout} from '../../redux/user/actions'
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -61,6 +49,20 @@ function classNames(...classes: string[]): string {
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const {user} = useSelector((state: any) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("this is user data in dashboard", user)
+  }, [user])
+  
+  const handleClick =async(type : string)=>{
+
+    console.log(type)
+    if(type === 'Sign out' && user){
+      await dispatch(logout())
+    }
+  }
 
   return (
     <>
@@ -318,7 +320,7 @@ export default function Dashboard() {
                         <MenuItem key={item.name}>
                           {({ focus }) => (
                             <a
-                              href={item.href}
+                              onClick={()=>handleClick(item.name)}
                               className={classNames(
                                 focus ? 'bg-gray-50' : '',
                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
@@ -337,7 +339,7 @@ export default function Dashboard() {
           </div>
 
           <main className="py-10">
-            <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
+            <div className="px-4 sm:px-6 lg:px-8">I am the dashboard 🚀</div>
           </main>
         </div>
       </div>
