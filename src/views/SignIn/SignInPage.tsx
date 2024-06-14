@@ -12,20 +12,20 @@ const SignInPage: React.FC = () => {
     password: "",
   });
 
-  const { email, password } = formState;
+
 
   const { userData } = useSelector((state: any) => state.user);
 
+  // TODO: ALL THE ROLE LOGIC CAN BE HANDLED IN HERE!
   useEffect(() => {
-    console.log(userData?.fetched)
-    if (userData?.fetched) {
-      navigate("/dashboard");
-    }
+    console.log(userData)
+ 
   }, [userData]);
 
   async function SignInPage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
    await dispatch(loginWithFirebase(formState.email, formState.password))
+   navigate('/dashboard')
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

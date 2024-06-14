@@ -14,6 +14,24 @@ const signinError = (error: any) => ({
   payload: error,
 });
 
+const setUser = (user: any)=>({
+  type: types.SET_USER,
+  payload: user
+})
+
+
+const logoutStart = () => ({
+  type: types.LOGOUT_START,
+});
+const logoutSuccess = (user: any) => ({
+  type: types.LOGOUT_SUCCESS,
+  payload: user,
+});
+const logoutError = (error: any) => ({
+  type: types.LOGOUT_FAIL,
+  payload: error,
+});
+
 // export const loginWithFirebase = (email : string, password: string):any=>{
 // return function(dispatch : any){
 //     dispatch(signinStart());
@@ -38,6 +56,12 @@ const signinError = (error: any) => ({
 
 // }
 // }
+
+export const placeUser = (user : any) : any =>{
+  return (dispatch: any) => {
+  dispatch(setUser(user))
+  }
+}
 
 export const loginWithFirebase = (email: string, password: string): any => {
   return async (dispatch: any) => {
@@ -82,3 +106,24 @@ export const loginWithFirebase = (email: string, password: string): any => {
     }
   };
 };
+
+
+export const logout = () : any=>{
+  return async (dispatch: any) => {
+    dispatch(logoutStart)
+    try {
+      await auth.signOut()
+      dispatch(logoutSuccess(null))
+      
+    } catch (error) {
+       let serializeError = {
+            code: (error as any)?.code || 'unknown_error',
+            message: (error as any)?.message || 'An unknown error occurred',
+            name: (error as any)?.name || 'FirebaseError',
+            customData: (error as any)?.customData || {},
+          };
+        dispatch(logoutError(serializeError))
+    }
+  }
+}
+
